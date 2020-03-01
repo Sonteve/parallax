@@ -11,8 +11,8 @@
         a {text-decoration: none;}
 
         /* nav */
-        #nav {position: absolute; left: 0; top: -61px; width: 100%; height: 61px; z-index: 1000; background-color: rgba(255,255,255,0.3); transition: all 0.3s ease;}
-        #nav.on {position: fixed; top: 0;}
+        #nav {position: fixed; left: 0; top: 0px; width: 100%; height: 61px; z-index: 1000; background-color: rgba(255,255,255,0.3); transition: all 0.3s ease;}
+        #nav.on {position: fixed; top: -61px;}
         #nav h1 {float: left; color: #fff; font-size: 40px; padding: 5px 5px 5px 15px; font-family: 'Abel' }
         #nav .menu {float: right; padding-right: 10px; }
         #nav .menu li {display: inline; }
@@ -76,6 +76,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
+        let prevScroll = 0;
         const nav = $('#nav ul li');
         const cont = $('#contents > div');
 
@@ -89,21 +90,15 @@
             $('html, body').animate({scrollTop:offset},600, 'easeInOutExpo');
         });
 
-        $(window).scroll(function(){
-            const wScroll = $(this).scrollTop();
-            
-            if( wScroll >= 200){
-                $('#nav').addClass('on');
-            }else if( wScroll === 0){
-                $('#nav').removeClass('on');
-            }
+        const wHeight = $(window).height();
+        const dHeight = $(document).height();
+        const navHeight = $('#nav').outerHeight();
+        let moveScroll = false;
+        let lastScrollTop = 0;
 
-            if(wScroll > 200){
-                $("#nav").addClass("on");
-            }else if (wScroll == 0) {
-                $("#nav").removeClass("on");
-            }
-            
+        $(window).scroll(function(e){
+            moveScroll = true;
+
             if(wScroll >= cont.eq(0).offset().top){
                 nav.removeClass("active");
                 nav.eq(0).addClass("active");
@@ -128,7 +123,26 @@
                 nav.removeClass("active");
                 nav.eq(5).addClass("active");
             }
-        });
+        });        
+
+        setInterval(function(){            
+            if(moveScroll){
+                hasScroll();
+                moveScroll = false;
+            }
+        },200);
+
+        function hasScroll(){
+            const wScroll = $(window).scrollTop();
+            if( wScroll > lastScrollTop && wScroll > navHeight ){
+                $('#nav').addClass('on');
+            }else{
+                if(wScroll + wHeight < dHeight){
+                    $('#nav').removeClass('on');
+                }                
+            }
+            lastScrollTop = wScroll;
+        }
     </script>
 </body>
 </html>
