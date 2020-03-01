@@ -137,9 +137,7 @@
             if( wScroll > lastScrollTop && wScroll > navHeight ){
                 $('#nav').addClass('on');
             }else{
-                if(wScroll + wHeight < dHeight){
-                    $('#nav').removeClass('on');
-                }                
+                $('#nav').removeClass('on');                
             }
             lastScrollTop = wScroll;
         }
